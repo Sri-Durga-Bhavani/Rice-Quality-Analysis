@@ -1,0 +1,589 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Rice Detection</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="Free HTML Templates" name="keywords">
+    <meta content="Free HTML Templates" name="description">
+
+    <!-- Favicon -->
+    <link href="{% static 'userstatic/img/favicon.ico' %}" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Roboto:wght@500;700&display=swap" rel="stylesheet">
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+    <!-- Libraries Stylesheet -->
+    <link href="{% static 'userstatic/lib/owlcarousel/assets/owl.carousel.min.css' %}" rel="stylesheet">
+    
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="{% static 'userstatic/css/bootstrap.min.css' %}" rel="stylesheet">
+    <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+    <!-- Template Stylesheet -->
+    <link href="{% static 'userstatic/css/style.css' %}" rel="stylesheet">
+    <style>
+      @import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
+      * {
+      box-sizing: border-box;
+      }
+
+      body {
+      background: #f6f5f7;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      height: 100vh;
+      }
+      
+      button {
+        border-radius: 20px;
+        border: 1px solid #FF4B2B;
+        background-color: #FF4B2B;
+        color: #FFFFFF;
+        font-size: 12px;
+        font-weight: bold;
+        padding: 12px 45px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        transition: transform 80ms ease-in;
+      }
+      
+      button:active {
+        transform: scale(0.95);
+      }
+      
+      button:focus {
+        outline: none;
+      }
+      
+      button.ghost {
+        background-color: transparent;
+        border-color: #FFFFFF;
+      }
+      
+      form {
+        background-color: #FFFFFF;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        padding: 0 50px;
+        height: 100%;
+        text-align: center;
+      }
+      
+      input {
+        background-color: #eee;
+        border: none;
+        padding: 12px 15px;
+        margin: 8px 0;
+        width: 100%;
+      }
+      
+      #container {
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 14px 28px rgba(0,0,0,0.25), 
+        0 10px 10px rgba(0,0,0,0.22);
+        position: relative;
+        overflow: hidden;
+        width: 768px;
+        max-width: 100%;
+        min-height: 480px;
+      }
+      
+      .form-container {
+        position: absolute;
+        top: 0;
+        height: 100%;
+        transition: all 0.6s ease-in-out;
+      }
+      
+      .sign-in-container {
+        left: 0;
+        width: 50%;
+        z-index: 2;
+      }
+      
+      .container.right-panel-active .sign-in-container {
+        transform: translateX(100%);
+      }
+      
+      .sign-up-container {
+        left: 0;
+        width: 50%;
+        opacity: 0;
+        z-index: 1;
+      }
+      
+      .container.right-panel-active .sign-up-container {
+        transform: translateX(100%);
+        opacity: 1;
+        z-index: 5;
+        animation: show 0.6s;
+      }
+      
+      @keyframes show {
+        0%, 49.99% {
+          opacity: 0;
+          z-index: 1;
+        }
+        
+        50%, 100% {
+          opacity: 1;
+          z-index: 5;
+        }
+      }
+      
+      .overlay-container {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        width: 50%;
+        height: 100%;
+        overflow: hidden;
+        transition: transform 0.6s ease-in-out;
+        z-index: 100;
+      }
+      
+      .container.right-panel-active .overlay-container{
+        transform: translateX(-100%);
+      }
+      
+      .overlay {
+        background: #FF416C;
+        background: -webkit-linear-gradient(to right, #34AD54, #41ffc6);
+        background: linear-gradient(to right, #2bffbc, #34AD54);
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: 0 0;
+        color: #FFFFFF;
+        position: relative;
+        left: -100%;
+        height: 100%;
+        width: 200%;
+          transform: translateX(0);
+        transition: transform 0.6s ease-in-out;
+      }
+      
+      .container.right-panel-active .overlay {
+          transform: translateX(50%);
+      }
+      
+      .overlay-panel {
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        padding: 0 40px;
+        text-align: center;
+        top: 0;
+        height: 100%;
+        width: 50%;
+        transform: translateX(0);
+        transition: transform 0.6s ease-in-out;
+      }
+      
+      .overlay-left {
+        transform: translateX(-20%);
+      }
+      
+      .container.right-panel-active .overlay-left {
+        transform: translateX(0);
+      }
+      
+      .overlay-right {
+        right: 0;
+        transform: translateX(0);
+      }
+      
+      .container.right-panel-active .overlay-right {
+        transform: translateX(20%);
+      }
+      
+      .social-container {
+        margin: 20px 0;
+      }
+      
+      .social-container a {
+        border: 1px solid #DDDDDD;
+        border-radius: 50%;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0 5px;
+        height: 40px;
+        width: 40px;
+      }
+      
+      footer {
+          background-color: #222;
+          color: #fff;
+          font-size: 14px;
+          bottom: 0;
+          position: fixed;
+          left: 0;
+          right: 0;
+          text-align: center;
+          z-index: 999;
+      }
+      
+      footer p {
+          margin: 10px 0;
+      }
+      
+      footer i {
+          color: red;
+      }
+      
+      footer a {
+          color: #3c97bf;
+          text-decoration: none;
+      }
+    </style>
+</head>
+
+<body>
+  {% if messages %}
+  {% for message in messages %}
+  {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+  <script>swal({
+          title: "Success!",
+          text: "{{message}}",
+          icon: "success",
+          button: "OK",
+      });
+  </script>
+  
+  {% elif message.level == DEFAULT_MESSAGE_LEVELS.WARNING %}
+  <script>swal({
+          title: "Warning :)",
+          text: "{{message}}",
+          icon: "warning",
+          button: "OK",
+       
+      });
+  </script>
+  {% elif message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
+  <script>swal({
+          title: "info :)",
+          text: "{{message}}",
+          icon: "info",
+          button: "OK",
+      });
+  </script>
+  {% elif message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+  <script>swal({
+          title: "error :)",
+          text: "{{message}}",
+          icon: "error",
+          button: "OK",
+      });
+  </script>
+  {% endif %}
+  {% endfor %}
+  {% endif %}
+    <!-- Topbar Start -->
+    <div class="container-fluid px-5 d-none d-lg-block">
+      <div class="row gx-5 py-3 align-items-center">
+          <div class="col-lg-3">
+              <div class="d-flex align-items-center justify-content-start">
+                  <i class="bi bi-phone-vibrate fs-1 text-primary me-2"></i>
+                  <h2 class="mb-0">+91 85558 87986</h2>
+              </div>
+          </div>
+          <div class="col-lg-6">
+              <div class="d-flex align-items-center justify-content-center">
+                  <a class="navbar-brand ms-lg-5">
+                      <h1 class="m-0 display-4 text-primary"><span class="text-secondary">Rice</span>Detection</h1>
+                  </a>
+              </div>
+          </div>
+          <div class="col-lg-3">
+              <div class="d-flex align-items-center justify-content-end">
+                  <a class="btn btn-primary btn-square rounded-circle me-2" href="#"><i class="fab fa-twitter"></i></a>
+                  <a class="btn btn-primary btn-square rounded-circle me-2" href="#"><i class="fab fa-facebook-f"></i></a>
+                  <a class="btn btn-primary btn-square rounded-circle me-2" href="#"><i class="fab fa-linkedin-in"></i></a>
+                  <a class="btn btn-primary btn-square rounded-circle" href="#"><i class="fab fa-instagram"></i></a>
+              </div>
+          </div>
+      </div>
+  </div>
+  <!-- Topbar End -->
+
+
+  <!-- Navbar Start -->
+  <nav class="navbar navbar-expand-lg bg-primary navbar-dark shadow-sm py-3 py-lg-0 px-3 px-lg-5">
+      <a class="navbar-brand d-flex d-lg-none">
+          <h1 class="m-0 display-4 text-secondary"><span class="text-white">Rice</span>Detection</h1>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+          <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+          <div class="navbar-nav mx-auto py-0">
+              <a href="{% url "index" %}" class="nav-item nav-link ">Home</a>
+              <a href="{% url "about" %}" class="nav-item nav-link">About</a>
+              <a href="{% url "service" %}" class="nav-item nav-link">Service</a>
+              <a href="{% url "user" %}" class="nav-item nav-link active">User Login</a>
+              <a href="{% url "admin" %}" class="nav-item nav-link">Admin Login</a>
+              <a href="{% url "contact" %}" class="nav-item nav-link">Contact</a>
+              
+          </div>
+      </div>
+     
+  </nav>
+  <!-- Navbar End -->
+
+
+    <!-- Hero Start -->
+    <div class="container-fluid bg-primary py-5 bg-hero mb-5">
+        <div class="container py-5">
+            <div class="row justify-content-start">
+                <div class="col-lg-8 text-center text-lg-start">
+                    <h1 class="display-1 text-white mb-md-4">User Login</h1>
+                    <a href="" class="btn btn-primary py-md-3 px-md-5 me-3">Home</a>
+                    <a href="" class="btn btn-secondary py-md-3 px-md-5">User Login</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Hero End -->
+
+
+    <!-- Blog Start -->
+    <div class="container" >
+      <div class="container" id="container">
+        
+        <div class="form-container sign-in-container">
+          <form method = "POST" enctype='multipart/form-data'>
+            {% csrf_token %}
+                        <h1>User Login</h1>
+            <hr>
+            <span>or use your account</span>
+            <input type="email" name = 'email_address' placeholder="Email" />
+            <input type="password" name = 'pass' placeholder="Password" />
+            <a href="#">Forgot your password?</a>
+            <button type="submit">Log In</button>
+          </form>
+        </div>
+        <div class="overlay-container">
+          <div class="overlay">
+            <div class="overlay-panel overlay-left">
+              <h1>Welcome Back!</h1>
+              <p>To keep connected with us please login with your personal info</p>
+              <button class="ghost" id="signIn">Sign In</button>
+            </div>
+            <div class="overlay-panel overlay-right">
+              <h1>Hello, Friend!</h1>
+              <p>Enter your personal details and start journey with us</p>
+              <a href="{% url "register" %}"><button class="ghost" id="signUp">Register</button></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Blog End -->
+
+
+   <!-- Footer Start -->
+   <div class="container-fluid bg-footer bg-primary text-white mt-5">
+    <div class="container">
+        <div class="row gx-5">
+            <div class="col-lg-8 col-md-6">
+                <div class="row gx-5">
+                    <div class="col-lg-4 col-md-12 pt-5 mb-5">
+                        <h4 class="text-white mb-4">Get In Touch</h4>
+                        <div class="d-flex mb-2">
+                            <i class="bi bi-geo-alt text-white me-2"></i>
+                            <p class="text-white mb-0">Snehapuri Colony, Hyderabad.</p>
+                        </div>
+                        <div class="d-flex mb-2">
+                            <i class="bi bi-envelope-open text-white me-2"></i>
+                            <p class="text-white mb-0">projects@codebook.in</p>
+                        </div>
+                        <div class="d-flex mb-2">
+                            <i class="bi bi-telephone text-white me-2"></i>
+                            <p class="text-white mb-0">+91 855 588 7986</p>
+                        </div>
+                        <div class="d-flex mt-4">
+                            <a class="btn btn-secondary btn-square rounded-circle me-2" href="#"><i class="fab fa-twitter"></i></a>
+                            <a class="btn btn-secondary btn-square rounded-circle me-2" href="#"><i class="fab fa-facebook-f"></i></a>
+                            <a class="btn btn-secondary btn-square rounded-circle me-2" href="#"><i class="fab fa-linkedin-in"></i></a>
+                            <a class="btn btn-secondary btn-square rounded-circle" href="#"><i class="fab fa-instagram"></i></a>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-12 pt-0 pt-lg-5 mb-5">
+                        <h4 class="text-white mb-4">Quick Links</h4>
+                        <div class="d-flex flex-column justify-content-start">
+                            <a class="text-white mb-2" href="#"><i class="bi bi-arrow-right text-white me-2"></i>Home</a>
+                            <a class="text-white mb-2" href="#"><i class="bi bi-arrow-right text-white me-2"></i>About Us</a>
+                            <a class="text-white mb-2" href="#"><i class="bi bi-arrow-right text-white me-2"></i>Our Services</a>
+                            <a class="text-white mb-2" href="#"><i class="bi bi-arrow-right text-white me-2"></i>User Login</a>
+                            <a class="text-white mb-2" href="#"><i class="bi bi-arrow-right text-white me-2"></i>Admin Login</a>
+                            <a class="text-white" href="#"><i class="bi bi-arrow-right text-white me-2"></i>Contact Us</a>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-12 pt-0 pt-lg-5 mb-5">
+                        <h4 class="text-white mb-4">Popular Links</h4>
+                        <div class="d-flex flex-column justify-content-start">
+                            <a class="text-white mb-2" href="#"><i class="bi bi-arrow-right text-white me-2"></i>Home</a>
+                            <a class="text-white mb-2" href="#"><i class="bi bi-arrow-right text-white me-2"></i>About Us</a>
+                            <a class="text-white mb-2" href="#"><i class="bi bi-arrow-right text-white me-2"></i>Our Services</a>
+                            <a class="text-white mb-2" href="#"><i class="bi bi-arrow-right text-white me-2"></i>User Login</a>
+                            <a class="text-white mb-2" href="#"><i class="bi bi-arrow-right text-white me-2"></i>Admin Login</a>
+                            <a class="text-white" href="#"><i class="bi bi-arrow-right text-white me-2"></i>Contact Us</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mt-lg-n5">
+                <div class="d-flex flex-column align-items-center justify-content-center text-center h-100 bg-secondary p-5">
+                    <h4 class="text-white">Newsletter</h4>
+                    <h6 class="text-white">Subscribe Our Newsletter</h6>
+                    <p>Amet justo diam dolor rebum lorem sit stet sea justo kasd</p>
+                    <form action="">
+                        <div class="input-group">
+                            <input type="text" class="form-control border-white p-3" placeholder="Your Email">
+                            <button class="btn btn-primary">Sign Up</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container-fluid bg-dark text-white py-4">
+    <div class="container text-center">
+        <p class="mb-0">&copy; <a class="text-secondary fw-bold" href="#">2023</a>. All Rights Reserved. Designed by <a class="text-secondary fw-bold" href="https://www.codebook.in/">Codebook Developer</a></p>
+        <br>Distributed By: <a class="text-secondary fw-bold" href="https://www.codebook.in/" target="_blank">CODEBOOK</a>
+    </div>
+</div>
+<!-- Footer End -->
+
+
+<!-- Back to Top -->
+<a href="#" class="btn btn-secondary py-3 fs-4 back-to-top"><i class="bi bi-arrow-up"></i></a>
+
+
+<!-- JavaScript Libraries -->
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{% static 'userstatic/lib/easing/easing.min.js' %}"></script>
+<script src="{% static 'userstatic/lib/waypoints/waypoints.min.js' %}"></script>
+<script src="{% static 'userstatic/lib/counterup/counterup.min.js' %}"></script>
+<script src="{% static 'userstatic/lib/owlcarousel/owl.carousel.min.js' %}"></script>
+<script>
+  const signUpButton = document.getElementById('signUp');
+  const signInButton = document.getElementById('signIn');
+  const container = document.getElementById('container');
+
+  signUpButton.addEventListener('click', () => {
+    container.classList.add("right-panel-active");
+  });
+
+  signInButton.addEventListener('click', () => {
+    container.classList.remove("right-panel-active");
+  });
+</script>
+<!-- Template Javascript -->
+<script src="{% static 'userstatic/js/main.js' %}"></script>
+<script>
+  var openListId = null;
+
+  function toggleList(listId) {
+      var listElement = document.getElementById(listId);
+      var ul = listElement.querySelector('ul');
+
+      if (openListId && openListId !== listId) {
+          // Close the previously open list
+          var openListElement = document.getElementById(openListId);
+          openListElement.querySelector('ul').style.display = 'none';
+          openListElement.setAttribute('aria-expanded', 'false');
+          openListElement.querySelector('.arrow-icon').innerHTML = '';
+      }
+
+      ul.style.display = (ul.style.display === 'none' || ul.style.display === '') ? 'block' : 'none';
+      listElement.setAttribute('aria-expanded', ul.style.display === 'block' ? 'true' : 'false');
+      listElement.querySelector('.arrow-icon').innerHTML = (ul.style.display === 'block') ? '' : '';
+
+      openListId = (ul.style.display === 'block') ? listId : null;
+  }
+</script>
+
+<script>
+  var openListId = null;
+
+  function toggleList(listId) {
+      var listElement = document.getElementById(listId);
+      var ul = listElement.querySelector('ul');
+
+      if (openListId && openListId !== listId) {
+          // Close the previously open list
+          var openListElement = document.getElementById(openListId);
+          openListElement.querySelector('ul').style.display = 'none';
+          openListElement.setAttribute('aria-expanded', 'false');
+          openListElement.querySelector('.arrow-icon').innerHTML = ';';
+      }
+
+      ul.style.display = (ul.style.display === 'none' || ul.style.display === '') ? 'block' : 'none';
+      listElement.setAttribute('aria-expanded', ul.style.display === 'block' ? 'true' : 'false');
+      listElement.querySelector('.arrow-icon').innerHTML = (ul.style.display === 'block') ? '' : '';
+
+      openListId = (ul.style.display === 'block') ? listId : null;
+  }
+</script>
+
+<script>
+  var openListId = null;
+
+  function toggleList(listId) {
+      var listElement = document.getElementById(listId);
+      var ul = listElement.querySelector('ul');
+
+      if (openListId && openListId !== listId) {
+          // Close the previously open list
+          var openListElement = document.getElementById(openListId);
+          openListElement.querySelector('ul').style.display = 'none';
+          openListElement.setAttribute('aria-expanded', 'false');
+          openListElement.querySelector('.arrow-icon').innerHTML = '';
+      }
+
+      ul.style.display = (ul.style.display === 'none' || ul.style.display === '') ? 'block' : 'none';
+      listElement.setAttribute('aria-expanded', ul.style.display === 'block' ? 'true' : 'false');
+      listElement.querySelector('.arrow-icon').innerHTML = (ul.style.display === 'block') ? '' : '';
+
+      openListId = (ul.style.display === 'block') ? listId : null;
+  }
+</script>
+<!-- Bootstrap core JavaScript-->
+<script src="{% static 'assets/js/jquery.min.js' %}"></script>
+<script src="{% static 'assets/js/popper.min.js' %}"></script>
+<script src="{% static 'assets/js/bootstrap.min.js' %}"></script>
+
+<!-- simplebar js -->
+<script src="{% static 'assets/plugins/simplebar/js/simplebar.js' %}"></script>
+<!-- sidebar-menu js -->
+<script src="{% static 'assets/js/sidebar-menu.js' %}"></script>
+<!-- loader scripts -->
+<script src="{% static 'assets/js/jquery.loading-indicator.js' %}"></script>
+<!-- Custom scripts -->
+<script src="{% static 'assets/js/app-script.js' %}"></script>
+<!-- Chart js -->
+
+<script src="{% static 'assets/plugins/Chart.js/Chart.min.js' %}"></script>
+
+<!-- Index js -->
+<script src="{% static 'assets/js/index.js' %}"></script>
+</body>
+
+</html>
